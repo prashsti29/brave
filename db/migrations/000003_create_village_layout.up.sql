@@ -7,3 +7,5 @@ CREATE TABLE village_layout(
     FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE,
     FOREIGN KEY (building_id) REFERENCES buildings(id) ON DELETE CASCADE
 );
+CREATE INDEX idx_village_layout_player_id ON village_layout(player_id);
+CREATE INDEX idx_village_layout_building_id ON village_layout(building_id);

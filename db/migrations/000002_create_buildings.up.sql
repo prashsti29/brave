@@ -16,3 +16,4 @@ CREATE TABLE buildings (
     current_health INT NOT NULL,
    created_at TIMESTAMP DEFAULT NOW()
 );
+CREATE INDEX idx_buildings_player_id ON buildings(player_id);
