@@ -3,7 +3,7 @@ CREATE TABLE village_layout(
     building_id UUID PRIMARY KEY,
     x INT NOT NULL,
     y INT NOT NULL,
-    updated_at TIMESTAMPZONE DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE,
     FOREIGN KEY (building_id) REFERENCES buildings(id) ON DELETE CASCADE
 );
