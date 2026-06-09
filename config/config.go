@@ -16,28 +16,34 @@ func ConnectDB() *sqlx.DB {
 		log.Fatal("Error loading .env file")
 	}
 
-	// debug: print loaded env values (avoid printing password in real apps)
-	log.Printf("DB envs: DB_HOST=%q DB_PORT=%q DB_USER=%q DB_NAME=%q\n",
-		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"))
+	// Print non-sensitive loaded env values; do not print raw .env or secrets.
+	maskedPassword := "<redacted>"
+	maskedJWT := "<redacted>"
+	log.Printf("DB envs: DB_HOST=%q DB_PORT=%q DB_USER=%q DB_NAME=%q DB_PASSWORD=%q JWT_SECRET=%q\n",
+		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), maskedPassword, maskedJWT)
 
-	// debug: also print raw .env file contents as seen by the process
-	if data, err := os.ReadFile(".env"); err != nil {
-		log.Printf("Failed to read .env: %v", err)
+	// Allow overriding connection via DATABASE_URL (e.g. postgres://user:pass@host:port/db)
+	databaseURL := os.Getenv("DATABASE_URL")
+	var db *sqlx.DB
+	if databaseURL != "" {
+		db, err = sqlx.Open("postgres", databaseURL)
+		if err != nil {
+			log.Fatal("Error connecting to database via DATABASE_URL: ", err)
+		}
 	} else {
-		log.Printf(".env raw: %q", string(data))
-	}
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-	)
+		connStr := fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_NAME"),
+		)
 
-	db, err := sqlx.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("Error connecting to database: ", err)
+		db, err = sqlx.Open("postgres", connStr)
+		if err != nil {
+			log.Fatal("Error connecting to database: ", err)
+		}
 	}
 
 	err = db.Ping()
