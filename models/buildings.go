@@ -3,19 +3,19 @@ package models
 import "time"
 
 type Building struct {
-	ID             string     `db:"id"`
-	PlayerID       string     `db:"player_id"`
-	Type           string     `db:"type"`
-	Name           string     `db:"name"`
-	Level          int        `db:"level"`
-	UpgradePrice   int        `db:"upgrade_price"`
-	UpgradeTime    int        `db:"upgrade_time"`
-	Currency       string     `db:"currency"`
-	IsUpgrading    bool       `db:"is_upgrading"`
-	UpgradeEndTime *time.Time `db:"upgrade_end_time"`
-	DunbrochLevel  int        `db:"dunbroch_level"`
-	MaxAllowed     int        `db:"max_allowed"`
-	MaxHealth      int        `db:"max_health"`
-	CurrentHealth  int        `db:"current_health"`
-	CreatedAt      time.Time  `db:"created_at"`
+    ID             string     `gorm:"primaryKey" json:"id"`
+    PlayerID       string     `gorm:"not null" json:"player_id"`
+    Type           string     `gorm:"not null" json:"type"`
+    Name           string     `gorm:"not null" json:"name"`
+    Level          int        `gorm:"default:1" json:"level"`
+    UpgradePrice   int        `gorm:"default:0" json:"upgrade_price"`
+    UpgradeTime    int        `gorm:"default:0" json:"upgrade_time"`
+    Currency       string     `json:"currency"`
+    IsUpgrading    bool       `gorm:"default:false" json:"is_upgrading"`
+    UpgradeEndTime *time.Time `json:"upgrade_end_time"`
+    DunbrochLevel  int        `gorm:"default:1" json:"dunbroch_level"`
+    MaxAllowed     int        `gorm:"default:1" json:"max_allowed"`
+    MaxHealth      int        `gorm:"not null" json:"max_health"`
+    CurrentHealth  int        `gorm:"not null" json:"current_health"`
+    CreatedAt      time.Time  `json:"created_at"`
 }

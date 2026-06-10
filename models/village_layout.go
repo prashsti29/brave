@@ -3,9 +3,9 @@ package models
 import "time"
 
 type VillageLayout struct {
-	PlayerID   string    `db:"player_id"`
-	BuildingID string    `db:"building_id"`
-	X          int       `db:"x"`
-	Y          int       `db:"y"`
-	UpdatedAt  time.Time `db:"updated_at"`
+    PlayerID   string    `gorm:"not null" json:"player_id"`
+    BuildingID string    `gorm:"primaryKey" json:"building_id"`
+    X          int       `gorm:"not null" json:"x"`
+    Y          int       `gorm:"not null" json:"y"`
+    UpdatedAt  time.Time `json:"updated_at"`
 }
