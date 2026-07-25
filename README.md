@@ -1,1 +1,1 @@
-this is a clone of the clash of clans, a multiplayer game.
+a multiplayer game inspired by Clash of Clans
