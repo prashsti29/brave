@@ -10,6 +10,15 @@ migrate-down:
 migrate-fix:
 	migrate -path db/migrations -database "$(DATABASE_URL)" force $(version)
 
+seed:
+	go run cmd/seed/main.go
+
+docker-up:
+	docker-compose up -d
+
+docker-down:
+	docker-compose down
+
 setup:
 	cp .env.example .env
 	go mod download
