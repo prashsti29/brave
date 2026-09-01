@@ -22,22 +22,20 @@ func NewPlayerService(playerRepo *repository.PlayerRepository, buildingService *
 }
 
 func (playerService *PlayerService) CreatePlayer(email string, password string) (*models.Player, error) {
-	var err error
-
-	var hashedBytes []byte
-	hashedBytes, err = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := hashPassword(password)
 	if err != nil {
 		return nil, err
 	}
 
-	var player models.Player
-	player.ID = uuid.New().String()
-	player.Email = email
-	player.PasswordHash = string(hashedBytes)
-	player.DunbrochLevel = 1
-	player.Gems = 10
-	player.Wisps = 500
-	player.Embis = 500
+	player := models.Player{
+		ID:           uuid.New().String(),
+		Email:        email,
+		PasswordHash: hashedPassword,
+		DunbrochLevel: 1,
+		Gems:         10,
+		Wisps:        500,
+		Embis:        500,
+	}
 
 	err = playerService.playerRepo.CreatePlayer(&player)
 	if err != nil {
@@ -49,6 +47,9 @@ func (playerService *PlayerService) CreatePlayer(email string, password string) 
 		return nil, err
 	}
 
+	return &player, nil
+}
+
 	var result *models.Player
 	result = &player
 	return result, nil
@@ -59,4 +60,23 @@ func (playerService *PlayerService) GetPlayerByID(id string) (*models.Player, er
 	var err error
 	player, err = playerService.playerRepo.GetPlayerByID(id)
 	return player, err
+}
+
+func (playerService *PlayerService) LoginPlayer(email, password string) (string, error) {
+	player, err := playerService.playerRepo.GetPlayerByEmail(email)
+	if err != nil {
+		return "", err
+	}
+
+	err = comparePassword(password, player.PasswordHash)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := GenerateToken(player.ID, player.Email)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
