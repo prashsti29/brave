@@ -31,3 +31,12 @@ func (playerRepo *PlayerRepository) GetPlayerByID(id string) (*models.Player, er
     playerResult = &player
     return playerResult, result.Error
 }
+
+func (playerRepo *PlayerRepository) GetPlayerByEmail(email string) (*models.Player, error) {
+	var player models.Player
+	result := playerRepo.database.First(&player, "email = ?", email)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &player, nil
+}
