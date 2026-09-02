@@ -132,3 +132,24 @@ func (playerController *PlayerController) Login(responseWriter http.ResponseWrit
 	response := LoginResponse{Token: token}
 	json.NewEncoder(responseWriter).Encode(response)
 }
+
+func (playerController *PlayerController) GetProfile(responseWriter http.ResponseWriter, request *http.Request) {
+	playerID := request.Context().Value("playerID").(string)
+	
+	player, err := playerController.playerService.GetPlayerByID(playerID)
+	if err != nil {
+		http.Error(responseWriter, "Player not found", http.StatusNotFound)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	response := PlayerResponse{
+		ID:            player.ID,
+		Email:         player.Email,
+		DunbrochLevel: player.DunbrochLevel,
+		Gems:          player.Gems,
+		Wisps:         player.Wisps,
+		Embis:         player.Embis,
+	}
+	json.NewEncoder(responseWriter).Encode(response)
+}
