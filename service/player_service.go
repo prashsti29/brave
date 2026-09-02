@@ -50,10 +50,6 @@ func (playerService *PlayerService) CreatePlayer(email string, password string) 
 	return &player, nil
 }
 
-	var result *models.Player
-	result = &player
-	return result, nil
-
 func (playerService *PlayerService) GetPlayerByID(id string) (*models.Player, error) {
 	var player *models.Player
 	var err error
@@ -78,4 +74,13 @@ func (playerService *PlayerService) LoginPlayer(email, password string) (string,
 	}
 
 	return token, nil
+}
+
+func (playerService *PlayerService) DeletePlayer(id string) error {
+	err := playerService.playerRepo.DeletePlayer(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
