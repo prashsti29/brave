@@ -53,7 +53,6 @@ func (playerService *PlayerService) CreatePlayer(email string, password string) 
 	var result *models.Player
 	result = &player
 	return result, nil
-}
 
 func (playerService *PlayerService) GetPlayerByID(id string) (*models.Player, error) {
 	var player *models.Player
