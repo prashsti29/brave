@@ -200,3 +200,12 @@ func (repo *BarrackConfigRepository) GetBarrackConfigByID(id string) (*models.Ba
 	}
 	return &config, nil
 }
+
+func (repo *BarrackConfigRepository) GetBarrackConfigByName(name string) (*models.BarrackConfig, error) {
+	var config models.BarrackConfig
+	result := repo.database.First(&config, "name = ?", name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &config, nil
+}
