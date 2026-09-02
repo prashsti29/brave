@@ -209,3 +209,35 @@ func (repo *BarrackConfigRepository) GetBarrackConfigByName(name string) (*model
 	}
 	return &config, nil
 }
+
+type BuildingConfigRepository struct {
+	database *gorm.DB
+}
+
+func NewBuildingConfigRepository(db *gorm.DB) *BuildingConfigRepository {
+	return &BuildingConfigRepository{database: db}
+}
+
+func (repo *BuildingConfigRepository) GetAllBuildingConfigs() ([]models.BuildingConfig, error) {
+	var configs []models.BuildingConfig
+	result := repo.database.Find(&configs)
+	return configs, result.Error
+}
+
+func (repo *BuildingConfigRepository) GetBuildingConfigByID(id string) (*models.BuildingConfig, error) {
+	var config models.BuildingConfig
+	result := repo.database.First(&config, "id = ?", id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &config, nil
+}
+
+func (repo *BuildingConfigRepository) GetBuildingConfigByNameAndLevel(name string, level int) (*models.BuildingConfig, error) {
+	var config models.BuildingConfig
+	result := repo.database.First(&config, "name = ? AND level = ?", name, level)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &config, nil
+}

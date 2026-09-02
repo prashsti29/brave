@@ -61,3 +61,15 @@ type BarrackConfig struct {
 	TrainingTime int       `gorm:"not null" json:"training_time"`
 	CreatedAt    time.Time `json:"created_at"`
 }
+
+type BuildingConfig struct {
+	ID           string `gorm:"primaryKey" json:"id"`
+	Name         string `gorm:"not null" json:"name"`
+	Level        int    `gorm:"not null" json:"level"`
+	UpgradePrice int    `gorm:"not null" json:"upgrade_price"`
+	UpgradeTime  int    `gorm:"not null" json:"upgrade_time"`
+	Currency     string `gorm:"not null" json:"currency"`
+	MaxHealth    int    `gorm:"not null" json:"max_health"`
+	DunbrochLevel int   `gorm:"not null" json:"dunbroch_level"`
+	MaxAllowed   int    `gorm:"not null" json:"max_allowed"`
+}
