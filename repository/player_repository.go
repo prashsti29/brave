@@ -40,3 +40,8 @@ func (playerRepo *PlayerRepository) GetPlayerByEmail(email string) (*models.Play
 	}
 	return &player, nil
 }
+
+func (playerRepo *PlayerRepository) DeletePlayer(id string) error {
+	result := playerRepo.database.Delete(&models.Player{}, "id = ?", id)
+	return result.Error
+}

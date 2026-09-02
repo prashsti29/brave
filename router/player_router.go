@@ -16,4 +16,5 @@ func RegisterPlayerRoutes(router *mux.Router, playerController *controllers.Play
 	router.HandleFunc("/players/{id}", playerController.GetPlayer).Methods("GET")
 	
 	router.Handle("/profile", middleware.AuthMiddleware(http.HandlerFunc(playerController.GetProfile))).Methods("GET")
+	router.Handle("/account", middleware.AuthMiddleware(http.HandlerFunc(playerController.DeleteAccount))).Methods("DELETE")
 }
