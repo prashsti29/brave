@@ -133,15 +133,6 @@ func (playerController *PlayerController) Login(responseWriter http.ResponseWrit
 	json.NewEncoder(responseWriter).Encode(response)
 }
 
-func (playerController *PlayerController) GetProfile(responseWriter http.ResponseWriter, request *http.Request) {
-	playerID := request.Context().Value("playerID").(string)
-	
-	player, err := playerController.playerService.GetPlayerByID(playerID)
-	if err != nil {
-		http.Error(responseWriter, "Player not found", http.StatusNotFound)
-		return
-	}
-
 	responseWriter.Header().Set("Content-Type", "application/json")
 	response := PlayerResponse{
 		ID:            player.ID,
@@ -152,4 +143,16 @@ func (playerController *PlayerController) GetProfile(responseWriter http.Respons
 		Embis:         player.Embis,
 	}
 	json.NewEncoder(responseWriter).Encode(response)
+}
+
+func (playerController *PlayerController) DeleteAccount(responseWriter http.ResponseWriter, request *http.Request) {
+	playerID := request.Context().Value("playerID").(string)
+	
+	err := playerController.playerService.DeletePlayer(playerID)
+	if err != nil {
+		http.Error(responseWriter, "Could not delete account", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.WriteHeader(http.StatusNoContent)
 }
