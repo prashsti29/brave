@@ -13,6 +13,15 @@ type CreatePlayerRequest struct {
 	Password string `json:"password"`
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
 type PlayerController struct {
 	playerService *service.PlayerService
 }
@@ -76,4 +85,50 @@ func (playerController *PlayerController) GetPlayer(responseWriter http.Response
 
 	responseWriter.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(responseWriter).Encode(player)
+}
+
+func (playerController *PlayerController) Register(responseWriter http.ResponseWriter, request *http.Request) {
+	var requestBody CreatePlayerRequest
+	err := json.NewDecoder(request.Body).Decode(&requestBody)
+	if err != nil {
+		http.Error(responseWriter, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	player, err := playerController.playerService.CreatePlayer(requestBody.Email, requestBody.Password)
+	if err != nil {
+		http.Error(responseWriter, "Could not create player", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	responseWriter.WriteHeader(http.StatusCreated)
+	response := PlayerResponse{
+		ID:            player.ID,
+		Email:         player.Email,
+		DunbrochLevel: player.DunbrochLevel,
+		Gems:          player.Gems,
+		Wisps:         player.Wisps,
+		Embis:         player.Embis,
+	}
+	json.NewEncoder(responseWriter).Encode(response)
+}
+
+func (playerController *PlayerController) Login(responseWriter http.ResponseWriter, request *http.Request) {
+	var requestBody LoginRequest
+	err := json.NewDecoder(request.Body).Decode(&requestBody)
+	if err != nil {
+		http.Error(responseWriter, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	token, err := playerController.playerService.LoginPlayer(requestBody.Email, requestBody.Password)
+	if err != nil {
+		http.Error(responseWriter, "Invalid email or password", http.StatusUnauthorized)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	response := LoginResponse{Token: token}
+	json.NewEncoder(responseWriter).Encode(response)
 }
