@@ -9,6 +9,7 @@ func SetupRouter(
 	playerController *controllers.PlayerController,
 	buildingController *controllers.BuildingController,
 	villageController *controllers.VillageLayoutController,
+	configController *controllers.ConfigController,
 ) *mux.Router {
 
 	var appRouter *mux.Router
@@ -17,6 +18,7 @@ func SetupRouter(
 	RegisterPlayerRoutes(appRouter, playerController)
 	RegisterBuildingRoutes(appRouter, buildingController)
 	RegisterVillageRoutes(appRouter, villageController)
+	RegisterConfigRoutes(appRouter, configController)
 
 	return appRouter
 }
