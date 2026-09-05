@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/prashsti29/brave/models"
 	"github.com/prashsti29/brave/repository"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type PlayerService struct {
