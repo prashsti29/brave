@@ -45,8 +45,11 @@ func ConnectDB() *gorm.DB {
 		}
 	}
 
-	err = db.Ping()
+	sqlDB, err := db.DB()
 	if err != nil {
+		log.Fatal("Cannot reach database: ", err)
+	}
+	if err = sqlDB.Ping(); err != nil {
 		log.Fatal("Cannot reach database: ", err)
 	}
 
