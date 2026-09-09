@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/prashsti29/brave/models"
 	"github.com/prashsti29/brave/service"
 )
 
@@ -34,4 +35,37 @@ func (buildingController *BuildingController) GetBuildingsByPlayerID(responseWri
 
 	responseWriter.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(responseWriter).Encode(buildings)
+}
+
+// CreateTroops validates and creates troops for the player
+func (buildingController *BuildingController) CreateTroops(responseWriter http.ResponseWriter, request *http.Request) {
+	var troopReq struct {
+		Name   string `json:"name"`
+		Level  int    `json:"level"`
+	}
+	err := json.NewDecoder(request.Body).Decode(&troopReq)
+	if err != nil {
+		http.Error(responseWriter, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Create troop config from request
+	troopConfig := models.TroopConfig{
+		Name:              troopReq.Name,
+		Level:             troopReq.Level,
+		UnlocksAtDunbrochLevel: 1,
+		CostWisps:         10,
+		CostEmbis:         0,
+		HousingSpace:      1,
+		MaxAllowed:        1,
+	}
+
+	// Validate troop creation using building service
+	if !buildingController.buildingService.ValidateTroopCreation(nil, troopConfig) {
+		http.Error(responseWriter, "Invalid troop configuration: insufficient Dunbroch level, gems, or housing space", http.StatusBadRequest)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(map[string]string{"status": "troops created"})
 }
