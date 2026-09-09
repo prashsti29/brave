@@ -133,18 +133,6 @@ func (playerController *PlayerController) Login(responseWriter http.ResponseWrit
 	json.NewEncoder(responseWriter).Encode(response)
 }
 
-	responseWriter.Header().Set("Content-Type", "application/json")
-	response := PlayerResponse{
-		ID:            player.ID,
-		Email:         player.Email,
-		DunbrochLevel: player.DunbrochLevel,
-		Gems:          player.Gems,
-		Wisps:         player.Wisps,
-		Embis:         player.Embis,
-	}
-	json.NewEncoder(responseWriter).Encode(response)
-}
-
 func (playerController *PlayerController) DeleteAccount(responseWriter http.ResponseWriter, request *http.Request) {
 	playerID := request.Context().Value("playerID").(string)
 	
