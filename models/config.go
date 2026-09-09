@@ -13,6 +13,7 @@ type TroopConfig struct {
 	HousingSpace                int       `gorm:"not null" json:"housing_space"`
 	CostWisps                   int       `gorm:"not null" json:"cost_wisps"`
 	CostEmbis                   int       `gorm:"not null" json:"cost_embis"`
+	MaxAllowed                  int       `gorm:"not null" json:"max_allowed"`
 	CreatedAt                   time.Time `json:"created_at"`
 }
 
