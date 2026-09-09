@@ -72,3 +72,17 @@ func (buildingService *BuildingService) GetBuildingsByPlayerID(playerID string) 
 	buildings, err = buildingService.buildingRepo.GetBuildingsByPlayerID(playerID)
 	return buildings, err
 }
+
+func (buildingService *BuildingService) ValidateTroopCreation(player *models.Player, troopConfig models.TroopConfig) bool {
+	if troopConfig.UnlocksAtDunbrochLevel <= 0 {
+		return false
+	}
+	totalCost := troopConfig.CostWisps + troopConfig.CostEmbis
+	if totalCost < 0 {
+		return false
+	}
+	if troopConfig.MaxAllowed <= 0 {
+		return false
+	}
+	return true
+}
