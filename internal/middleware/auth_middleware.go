@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/prashsti29/brave/service"
+	"github.com/prashsti29/brave/internal/service"
 )
 
 const PlayerIDContextKey = "playerID"

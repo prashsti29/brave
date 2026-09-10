@@ -5,16 +5,17 @@ import (
 "log"
 "net/http"
 
-"github.com/prashsti29/brave/config"
-"github.com/prashsti29/brave/controllers"
-"github.com/prashsti29/brave/repository"
-"github.com/prashsti29/brave/router"
-"github.com/prashsti29/brave/service"
+"github.com/prashsti29/brave/internal/config"
+"github.com/prashsti29/brave/internal/controllers"
+"github.com/prashsti29/brave/internal/repository"
+"github.com/prashsti29/brave/internal/router"
+"github.com/prashsti29/brave/internal/service"
 )
 
 func main() {
 	db := config.ConnectDB()
-	defer db.Close()
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 
 	fmt.Println("Server starting...")
 

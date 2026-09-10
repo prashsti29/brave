@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/prashsti29/brave/service"
+	"github.com/prashsti29/brave/internal/service"
 )
 
 type ConfigController struct {

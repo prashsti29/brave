@@ -2,7 +2,7 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"github.com/prashsti29/brave/models"
+	"github.com/prashsti29/brave/internal/models"
 )
 
 type PlayerRepository struct {

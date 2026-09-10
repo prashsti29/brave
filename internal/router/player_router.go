@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/prashsti29/brave/controllers"
-	"github.com/prashsti29/brave/middleware"
+	"github.com/prashsti29/brave/internal/controllers"
+	"github.com/prashsti29/brave/internal/middleware"
 )
 
 func RegisterPlayerRoutes(router *mux.Router, playerController *controllers.PlayerController) {

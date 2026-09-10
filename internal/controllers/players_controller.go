@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/prashsti29/brave/service"
+	"github.com/prashsti29/brave/internal/service"
 )
 
 type CreatePlayerRequest struct {
@@ -143,4 +143,25 @@ func (playerController *PlayerController) DeleteAccount(responseWriter http.Resp
 	}
 
 	responseWriter.WriteHeader(http.StatusNoContent)
+}
+
+func (playerController *PlayerController) GetProfile(responseWriter http.ResponseWriter, request *http.Request) {
+	playerID := request.Context().Value("playerID").(string)
+
+	player, err := playerController.playerService.GetPlayerByID(playerID)
+	if err != nil {
+		http.Error(responseWriter, "Player not found", http.StatusNotFound)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	response := PlayerResponse{
+		ID:            player.ID,
+		Email:         player.Email,
+		DunbrochLevel: player.DunbrochLevel,
+		Gems:          player.Gems,
+		Wisps:         player.Wisps,
+		Embis:         player.Embis,
+	}
+	json.NewEncoder(responseWriter).Encode(response)
 }

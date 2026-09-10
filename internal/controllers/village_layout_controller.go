@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/prashsti29/brave/service"
+	"github.com/prashsti29/brave/internal/service"
 )
 
 type VillageLayoutController struct {
