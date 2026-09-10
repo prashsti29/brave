@@ -69,3 +69,45 @@ func (buildingController *BuildingController) CreateTroops(responseWriter http.R
 	responseWriter.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(responseWriter).Encode(map[string]string{"status": "troops created"})
 }
+
+// AddBuilding handles creation and placement of a new building
+func (buildingController *BuildingController) AddBuilding(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	playerID := vars["player_id"]
+
+	var req struct {
+		Type      string `json:"type"`
+		Name      string `json:"name"`
+		MaxHealth int    `json:"max_health"`
+		X         int    `json:"x"`
+		Y         int    `json:"y"`
+	}
+
+	err := json.NewDecoder(request.Body).Decode(&req)
+	if err != nil {
+		http.Error(responseWriter, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	building := models.Building{
+		PlayerID:      playerID,
+		Type:          req.Type,
+		Name:          req.Name,
+		Level:         1,
+		MaxHealth:     req.MaxHealth,
+		CurrentHealth: req.MaxHealth,
+		DunbrochLevel: 1,
+		MaxAllowed:    1,
+		IsUpgrading:   false,
+	}
+
+	err = buildingController.buildingService.AddBuilding(&building, req.X, req.Y)
+	if err != nil {
+		http.Error(responseWriter, "Could not add building", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	responseWriter.WriteHeader(http.StatusCreated)
+	json.NewEncoder(responseWriter).Encode(building)
+}
