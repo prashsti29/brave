@@ -86,3 +86,25 @@ func (buildingService *BuildingService) ValidateTroopCreation(player *models.Pla
 	}
 	return true
 }
+
+func (buildingService *BuildingService) AddBuilding(building *models.Building, x, y int) error {
+	if building.ID == "" {
+		building.ID = uuid.New().String()
+	}
+	if building.Level == 0 {
+		building.Level = 1
+	}
+	if building.DunbrochLevel == 0 {
+		building.DunbrochLevel = 1
+	}
+	if building.MaxAllowed == 0 {
+		building.MaxAllowed = 1
+	}
+
+	err := buildingService.buildingRepo.CreateBuilding(building)
+	if err != nil {
+		return err
+	}
+
+	return buildingService.villageService.PlaceBuilding(building.PlayerID, building.ID, x, y)
+}
