@@ -111,3 +111,18 @@ func (buildingController *BuildingController) AddBuilding(responseWriter http.Re
 	responseWriter.WriteHeader(http.StatusCreated)
 	json.NewEncoder(responseWriter).Encode(building)
 }
+
+// UpgradeBuilding handles building upgrade requests
+func (buildingController *BuildingController) UpgradeBuilding(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	buildingID := vars["building_id"]
+
+	building, err := buildingController.buildingService.UpgradeBuilding(buildingID)
+	if err != nil {
+		http.Error(responseWriter, "Could not upgrade building", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(building)
+}
