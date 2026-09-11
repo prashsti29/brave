@@ -9,4 +9,5 @@ func RegisterBuildingRoutes(router *mux.Router, buildingController *controllers.
 	router.HandleFunc("/buildings/{player_id}", buildingController.GetBuildingsByPlayerID).Methods("GET")
 	router.HandleFunc("/buildings/{player_id}", buildingController.AddBuilding).Methods("POST")
 	router.HandleFunc("/buildings/{player_id}/troops", buildingController.CreateTroops).Methods("POST")
+	router.HandleFunc("/buildings/{building_id}/upgrade", buildingController.UpgradeBuilding).Methods("PUT")
 }
