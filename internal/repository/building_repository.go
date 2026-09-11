@@ -29,3 +29,16 @@ func (buildingRepo *BuildingRepository) GetBuildingsByPlayerID(playerID string) 
 	result = buildingRepo.database.Where("player_id = ?", playerID).Find(&buildings)
 	return buildings, result.Error
 }
+
+func (buildingRepo *BuildingRepository) GetBuildingByID(id string) (*models.Building, error) {
+	var building models.Building
+	result := buildingRepo.database.First(&building, "id = ?", id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &building, nil
+}
+
+func (buildingRepo *BuildingRepository) UpdateBuilding(building *models.Building) error {
+	return buildingRepo.database.Save(building).Error
+}

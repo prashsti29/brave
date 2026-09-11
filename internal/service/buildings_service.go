@@ -108,3 +108,17 @@ func (buildingService *BuildingService) AddBuilding(building *models.Building, x
 
 	return buildingService.villageService.PlaceBuilding(building.PlayerID, building.ID, x, y)
 }
+
+func (buildingService *BuildingService) UpgradeBuilding(buildingID string) (*models.Building, error) {
+	building, err := buildingService.buildingRepo.GetBuildingByID(buildingID)
+	if err != nil {
+		return nil, err
+	}
+	building.Level++
+	building.IsUpgrading = true
+	err = buildingService.buildingRepo.UpdateBuilding(building)
+	if err != nil {
+		return nil, err
+	}
+	return building, nil
+}
