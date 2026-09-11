@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/prashsti29/brave/internal/models"
 	"github.com/prashsti29/brave/internal/repository"
@@ -121,4 +123,15 @@ func (buildingService *BuildingService) UpgradeBuilding(buildingID string) (*mod
 		return nil, err
 	}
 	return building, nil
+}
+
+func (buildingService *BuildingService) MoveBuilding(playerID string, buildingID string, newX int, newY int) error {
+	building, err := buildingService.buildingRepo.GetBuildingByID(buildingID)
+	if err != nil {
+		return err
+	}
+	if building.PlayerID != playerID {
+		return errors.New("unauthorized building access")
+	}
+	return buildingService.villageService.PlaceBuilding(playerID, buildingID, newX, newY)
 }
