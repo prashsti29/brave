@@ -112,17 +112,29 @@ func (buildingController *BuildingController) AddBuilding(responseWriter http.Re
 	json.NewEncoder(responseWriter).Encode(building)
 }
 
-// UpgradeBuilding handles building upgrade requests
-func (buildingController *BuildingController) UpgradeBuilding(responseWriter http.ResponseWriter, request *http.Request) {
+// MoveBuilding handles moving an existing building in the village layout
+func (buildingController *BuildingController) MoveBuilding(responseWriter http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
+	playerID := vars["player_id"]
 	buildingID := vars["building_id"]
 
-	building, err := buildingController.buildingService.UpgradeBuilding(buildingID)
+	var req struct {
+		X int `json:"x"`
+		Y int `json:"y"`
+	}
+
+	err := json.NewDecoder(request.Body).Decode(&req)
 	if err != nil {
-		http.Error(responseWriter, "Could not upgrade building", http.StatusInternalServerError)
+		http.Error(responseWriter, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	err = buildingController.buildingService.MoveBuilding(playerID, buildingID, req.X, req.Y)
+	if err != nil {
+		http.Error(responseWriter, "Could not move building", http.StatusInternalServerError)
 		return
 	}
 
 	responseWriter.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(responseWriter).Encode(building)
+	json.NewEncoder(responseWriter).Encode(map[string]string{"status": "building moved"})
 }
