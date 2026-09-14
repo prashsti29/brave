@@ -138,3 +138,18 @@ func (buildingController *BuildingController) MoveBuilding(responseWriter http.R
 	responseWriter.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(responseWriter).Encode(map[string]string{"status": "building moved"})
 }
+
+// CompleteUpgrade handles completing an upgrade instantly by spending gems
+func (buildingController *BuildingController) CompleteUpgrade(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	buildingID := vars["building_id"]
+
+	building, err := buildingController.buildingService.CompleteUpgrade(buildingID)
+	if err != nil {
+		http.Error(responseWriter, "Could not complete upgrade", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(building)
+}
