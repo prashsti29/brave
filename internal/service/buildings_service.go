@@ -125,13 +125,19 @@ func (buildingService *BuildingService) UpgradeBuilding(buildingID string) (*mod
 	return building, nil
 }
 
-func (buildingService *BuildingService) MoveBuilding(playerID string, buildingID string, newX int, newY int) error {
+func (buildingService *BuildingService) CompleteUpgrade(buildingID string) (*models.Building, error) {
 	building, err := buildingService.buildingRepo.GetBuildingByID(buildingID)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if building.PlayerID != playerID {
-		return errors.New("unauthorized building access")
+	if !building.IsUpgrading {
+		return nil, errors.New("building is not currently upgrading")
 	}
-	return buildingService.villageService.PlaceBuilding(playerID, buildingID, newX, newY)
+	building.CurrentHealth = building.MaxHealth
+	building.IsUpgrading = false
+	err = buildingService.buildingRepo.UpdateBuilding(building)
+	if err != nil {
+		return nil, err
+	}
+	return building, nil
 }
