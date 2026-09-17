@@ -141,3 +141,16 @@ func (buildingService *BuildingService) CompleteUpgrade(buildingID string) (*mod
 	}
 	return building, nil
 }
+
+// ResourceProductionService handles tick-based resource generation
+type ResourceProductionService struct {
+	buildingRepo *repository.BuildingRepository
+}
+
+func NewResourceProductionService(buildingRepo *repository.BuildingRepository) *ResourceProductionService {
+	var svc ResourceProductionService
+	svc.buildingRepo = buildingRepo
+	var result *ResourceProductionService
+	result = &svc
+	return result
+}
