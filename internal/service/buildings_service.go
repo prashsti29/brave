@@ -142,3 +142,14 @@ func (buildingService *BuildingService) CompleteUpgrade(buildingID string) (*mod
 	return building, nil
 }
 
+func (buildingService *BuildingService) MoveBuilding(playerID, buildingID string, x, y int) error {
+	building, err := buildingService.buildingRepo.GetBuildingByID(buildingID)
+	if err != nil {
+		return err
+	}
+	if building.PlayerID != playerID {
+		return errors.New("building does not belong to player")
+	}
+	return buildingService.villageService.PlaceBuilding(playerID, buildingID, x, y)
+}
+
