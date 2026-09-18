@@ -169,3 +169,33 @@ func (buildingController *BuildingController) UpgradeBuilding(responseWriter htt
 	json.NewEncoder(responseWriter).Encode(building)
 }
 
+// CollectGold handles collecting gold from producer buildings
+func (buildingController *BuildingController) CollectGold(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	playerID := vars["player_id"]
+
+	gold, err := buildingController.buildingService.CollectGold(playerID)
+	if err != nil {
+		http.Error(responseWriter, "Could not collect gold", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(map[string]int{"gold": gold})
+}
+
+// CollectElixir handles collecting elixir from producer buildings
+func (buildingController *BuildingController) CollectElixir(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	playerID := vars["player_id"]
+
+	elixir, err := buildingController.buildingService.CollectElixir(playerID)
+	if err != nil {
+		http.Error(responseWriter, "Could not collect elixir", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(map[string]int{"elixir": elixir})
+}
+
