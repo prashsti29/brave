@@ -12,4 +12,6 @@ func RegisterBuildingRoutes(router *mux.Router, buildingController *controllers.
 	router.HandleFunc("/buildings/{building_id}/upgrade", buildingController.UpgradeBuilding).Methods("PUT")
 	router.HandleFunc("/buildings/{building_id}/complete", buildingController.CompleteUpgrade).Methods("POST")
 	router.HandleFunc("/buildings/{player_id}/{building_id}/move", buildingController.MoveBuilding).Methods("PUT")
+	router.HandleFunc("/collect/gold", buildingController.CollectGold).Methods("POST")
+	router.HandleFunc("/collect/elixir", buildingController.CollectElixir).Methods("POST")
 }
