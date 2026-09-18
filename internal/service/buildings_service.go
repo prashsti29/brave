@@ -153,3 +153,33 @@ func (buildingService *BuildingService) MoveBuilding(playerID, buildingID string
 	return buildingService.villageService.PlaceBuilding(playerID, buildingID, x, y)
 }
 
+// CollectGold collects gold from producer buildings
+func (buildingService *BuildingService) CollectGold(playerID string) (int, error) {
+	buildings, err := buildingService.GetBuildingsByPlayerID(playerID)
+	if err != nil {
+		return 0, err
+	}
+	total := 0
+	for _, b := range buildings {
+		if b.Type == "gold_mine" {
+			total += 10 * b.Level
+		}
+	}
+	return total, nil
+}
+
+// CollectElixir collects elixir from producer buildings
+func (buildingService *BuildingService) CollectElixir(playerID string) (int, error) {
+	buildings, err := buildingService.GetBuildingsByPlayerID(playerID)
+	if err != nil {
+		return 0, err
+	}
+	total := 0
+	for _, b := range buildings {
+		if b.Type == "elixir_collector" {
+			total += 10 * b.Level
+		}
+	}
+	return total, nil
+}
+
